@@ -7,31 +7,28 @@ export const protect = async (req, res, next) => {
 
     const token = req.cookies.token;
 
-    console.log("Token:", token);
-
     if (!token) {
-      return res.status(401).json({
-        message: "Not authorized, no token",
-      });
+      console.log("❌ No token");
+      return res.status(401).json({ message: "No token" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("✅ Decoded:", decoded);
 
     const user = await User.findById(decoded.userId).select("-password");
+    console.log("✅ User:", user);
 
     if (!user) {
-      return res.status(401).json({
-        message: "Not authorized, user not found",
-      });
+      console.log("❌ User not found");
+      return res.status(401).json({ message: "User not found" });
     }
 
     req.user = user;
     next();
-  } catch (error) {
-    console.error(error);
-    return res.status(401).json({
-      message: "Not authorized, token failed",
-    });
+  } catch (err) {
+    console.log("❌ VERIFY ERROR");
+    console.log(err);
+    return res.status(401).json({ message: err.message });
   }
 };
 
