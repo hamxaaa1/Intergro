@@ -3,10 +3,7 @@ import { axiosInstance } from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 
-const BASE_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:5000"
-    : "https://intergro.onrender.com";
+const BASE_URL = "https://intergro.onrender.com"
 
 export const useAuthStore = create((set, get) => ({
   authUser: undefined,
