@@ -3,11 +3,9 @@ import User from "../models/User.model.js";
 
 export const protect = async (req, res, next) => {
   try {
-    console.log("HEADERS:", req.headers);
-    console.log("COOKIE HEADER:", req.headers.cookie);
-    console.log("PARSED COOKIES:", req.cookies);
+    console.log("AUTH HEADER:", req.headers.authorization);
 
-    const token = req.cookies.token;
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -28,8 +26,10 @@ export const protect = async (req, res, next) => {
     req.user = user;
 
     next();
+
   } catch (err) {
     console.log(err);
+
     return res.status(401).json({
       message: err.message,
     });

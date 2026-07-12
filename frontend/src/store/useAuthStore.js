@@ -4,91 +4,145 @@ import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 
 const BASE_URL =
-import.meta.env.MODE === "development"
-  ? "http://localhost:5000"
-  : "https://intergro.onrender.com";
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5000"
+    : "https://intergro.onrender.com";
 
 export const useAuthStore = create((set, get) => ({
-  authUser: undefined, // ✅ IMPORTANT: undefined = loading state
+  authUser: undefined,
   isLoggingIn: false,
   isSigningUp: false,
   isUpdatingProfile: false,
   onlineUsers: [],
   socket: null,
 
-  // ✅ AUTH CHECK
+  // AUTH CHECK
   checkAuth: async () => {
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        set({ authUser: null });
+        return;
+      }
+
       const res = await axiosInstance.get("/auth/profile");
+
       set({ authUser: res.data.user });
+
       get().connectSocket();
+
     } catch (error) {
-      set({ authUser: null }); // logged out
+      localStorage.removeItem("token");
+      set({ authUser: null });
     }
   },
+
 
   // LOGIN
   login: async (formData) => {
     try {
       set({ isLoggingIn: true });
+
       const res = await axiosInstance.post("/auth/login", formData);
+
+      localStorage.setItem("token", res.data.token);
+
       set({ authUser: res.data.user });
+
       toast.success("Logged in successfully!");
+
       get().connectSocket();
+
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed!");
+      toast.error(
+        err.response?.data?.message || "Login failed!"
+      );
     } finally {
       set({ isLoggingIn: false });
     }
   },
 
+
   // REGISTER
   register: async (formData) => {
     try {
       set({ isSigningUp: true });
-      const res = await axiosInstance.post("/auth/register", formData);
+
+      const res = await axiosInstance.post(
+        "/auth/register",
+        formData
+      );
+
+      localStorage.setItem("token", res.data.token);
+
       set({ authUser: res.data.user });
+
       toast.success("Account created!");
+
       get().connectSocket();
+
     } catch (err) {
-      toast.error(err.response?.data?.message || "Signup failed!");
+      toast.error(
+        err.response?.data?.message || "Signup failed!"
+      );
     } finally {
       set({ isSigningUp: false });
     }
   },
 
+
   // LOGOUT
   logout: async () => {
     try {
-      await axiosInstance.get("/auth/logout");
+      localStorage.removeItem("token");
+
       toast.success("Logged out");
+
       get().disconnectSocket();
+
     } catch (err) {
       toast.error("Logout failed!");
+
     } finally {
       set({ authUser: null });
     }
   },
 
+
   // SOCKET
   connectSocket: () => {
     const { authUser } = get();
+
     if (!authUser || get().socket?.connected) return;
 
+
     const socket = io(BASE_URL, {
-      query: { userId: authUser._id },
+      query: {
+        userId: authUser._id,
+      },
     });
+
 
     set({ socket });
 
+
     socket.on("getOnlineUsers", (users) => {
-      set({ onlineUsers: users });
+      set({
+        onlineUsers: users,
+      });
     });
   },
+
 
   disconnectSocket: () => {
     if (get().socket?.connected) {
       get().socket.disconnect();
     }
+
+    set({
+      socket: null,
+      onlineUsers: [],
+    });
   },
 }));
