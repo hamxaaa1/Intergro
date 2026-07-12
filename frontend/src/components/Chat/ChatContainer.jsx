@@ -125,12 +125,12 @@ const ChatContainer = () => {
                 {/* Message content */}
                 {msg.text && <p>{msg.text}</p>}
                 {msg.image && (
-                  <img
-                    src={msg.image}
-                    alt="Attachment"
-                    className="rounded-lg mt-1 max-w-full"
-                  />
-                )}
+  <img
+    src={msg.image}
+    alt="Attachment"
+    className="mt-2 rounded-xl w-auto max-w-xs md:max-w-sm h-auto"
+  />
+)}
 
                 {/* Timestamp */}
                 <p className="text-xs text-zinc-400 mt-1">
