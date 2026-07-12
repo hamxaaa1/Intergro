@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { axiosInstance } from "../../utils/axiosInstance";
 
 import {
   DragDropContext,
@@ -203,14 +204,13 @@ export default function PdfMerger() {
 
       toast.info("Merging files...");
 
-      const response = await axios.post(
-        "http://localhost:5000/api/pdf/merge",
+      const response = await axiosInstance.post(
+        "/pdf/merge",
         formData,
         {
           responseType: "blob",
           headers: {
-            "Content-Type":
-              "multipart/form-data",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
