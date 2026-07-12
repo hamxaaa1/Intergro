@@ -106,12 +106,12 @@ const SidebarLayout = ({ children }) => {
           >
             <Bot size={18} /> Chatbot
           </Link>
-          <Link
+          {/* <Link
                 to="/pdf-merger"
                 className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-base-300"
               >
                 <FileText size={18} /> PDF Merger
-              </Link>
+              </Link> */}
         </nav>
       </aside>
 
