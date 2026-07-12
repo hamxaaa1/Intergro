@@ -50,6 +50,7 @@ export const registerUser = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     console.log("SET COOKIE HEADER:", res.getHeaders()["set-cookie"]);
@@ -97,6 +98,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     
@@ -124,6 +126,7 @@ export const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      path: "/",
     });
 
     return res.status(200).json({ message: "Logged out successfully" });
