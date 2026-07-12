@@ -1,5 +1,7 @@
 import express from "express"
 import dotenv from "dotenv";
+dotenv.config();
+
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./lib/db.js";
@@ -13,7 +15,7 @@ import mergeRoutes from "./routes/merge.route.js"
 
 import { app, server } from "./lib/socket.js"; // <-- reuse app & server from socket.js
 
-dotenv.config();
+app.set("trust proxy", 1);
 
 // ✅ Middlewares
 app.use(express.json());
@@ -21,7 +23,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );

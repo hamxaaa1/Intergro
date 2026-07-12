@@ -52,6 +52,7 @@ export const registerUser = async (req, res) => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    console.log("SET COOKIE HEADER:", res.getHeaders()["set-cookie"]);
 
     // Return user without password automatically
     const userResponse = await User.findById(newUser._id).select("-password");
@@ -98,6 +99,8 @@ export const loginUser = async (req, res) => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    
+    console.log("LOGIN COOKIE:", res.getHeaders()["set-cookie"]);
 
     // Fetch user without password
     const userResponse = await User.findById(existingUser._id).select("-password");
