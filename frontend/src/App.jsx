@@ -31,6 +31,7 @@ import Navbar from "./components/Header/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Chat/Home";
 import Chatbot from "./pages/Chatbot/Chatbot";
+import LandingPage from "./pages/Home/landing";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -72,6 +73,7 @@ const App = () => {
         <div className="flex-1">
           <Routes>
             <Route path="/settings" element={<Settings />} />
+            <Route path="/" element={<LandingPage />} />
             <Route
               path="/login"
               element={

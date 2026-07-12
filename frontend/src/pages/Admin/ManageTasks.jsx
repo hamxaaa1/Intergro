@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDashboardStore } from "../../store/useTaskStore";
 import defaultAvatar from "../../assets/avatar.png";
-import { Loader2, FileDown } from "lucide-react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useReportStore } from "../../store/useReportStore";
 import SidebarLayout from "../../components/layouts/SidebarLayout";
+import { Loader2, FileDown, Trash2 } from "lucide-react";
 
 const statusColors = {
   Pending: "bg-yellow-100 text-yellow-800",
@@ -20,7 +20,7 @@ const priorityColors = {
 };
 
 const ManageTasks = () => {
-  const { tasks, fetchTasks, isLoading } = useDashboardStore();
+  const { tasks, fetchTasks, isLoading, deleteTask  } = useDashboardStore();
   const { downloadReport, isDownloading } = useReportStore();
 
   const [filter, setFilter] = useState("All");
@@ -159,51 +159,75 @@ const ManageTasks = () => {
                     </div>
 
                     {/* Users */}
-                    <div className="flex justify-between items-center mt-2">
-                      <div className="flex -space-x-2">
-                        {task.assignedTo.map((user) => (
-                          <div key={user._id} className="relative group">
-                            <img
-                              src={user.avatar || defaultAvatar}
-                              alt={user.name}
-                              className="w-8 h-8 rounded-full border-2 border-base-100 cursor-pointer"
-                            />
+<div className="flex justify-between items-center mt-2">
+  <div className="flex -space-x-2">
+    {task.assignedTo.map((user) => (
+      <div key={user._id} className="relative group">
+        <img
+          src={user.avatar || defaultAvatar}
+          alt={user.name}
+          className="w-8 h-8 rounded-full border-2 border-base-100 cursor-pointer"
+        />
 
-                            {/* Tooltip */}
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-base-100 border border-base-300 rounded-lg shadow-lg p-2 text-sm opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
-                              <div className="flex items-center gap-2">
-                                <img
-                                  src={user.avatar || defaultAvatar}
-                                  alt={user.name}
-                                  className="w-8 h-8 rounded-full"
-                                />
-                                <div>
-                                  <p className="font-semibold text-base-content">
-                                    {user.name}
-                                  </p>
-                                  <p className="text-base-content/60 text-xs">
-                                    {user.email}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+        {/* Tooltip */}
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-base-100 border border-base-300 rounded-lg shadow-lg p-2 text-sm opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
+          <div className="flex items-center gap-2">
+            <img
+              src={user.avatar || defaultAvatar}
+              alt={user.name}
+              className="w-8 h-8 rounded-full"
+            />
+            <div>
+              <p className="font-semibold text-base-content">
+                {user.name}
+              </p>
+              <p className="text-base-content/60 text-xs">
+                {user.email}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
 
-                      {task.attachments?.length > 0 && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedLinks(task.attachments);
-                            setIsModalOpen(true);
-                          }}
-                          className="btn btn-xs btn-outline btn-primary"
-                        >
-                          📎 {task.attachments.length} Attachments
-                        </button>
-                      )}
-                    </div>
+  <div className="flex items-center gap-2">
+    {task.attachments?.length > 0 && (
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedLinks(task.attachments);
+          setIsModalOpen(true);
+        }}
+        className="btn btn-xs btn-outline btn-primary"
+      >
+        📎 {task.attachments.length} Attachments
+      </button>
+    )}
+
+    <button
+      onClick={async (e) => {
+        e.stopPropagation();
+
+        const confirmed = window.confirm(
+          "Are you sure you want to delete this task?"
+        );
+
+        if (!confirmed) return;
+
+        try {
+          await deleteTask(task._id);
+        } catch (error) {
+          console.error(error);
+        }
+      }}
+      className="btn btn-xs btn-error"
+      title="Delete Task"
+    >
+      <Trash2 size={14} />
+    </button>
+  </div>
+</div>
                   </div>
                 );
               })}

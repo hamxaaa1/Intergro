@@ -162,10 +162,6 @@
 
 // export default Navbar;
 
-
-
-
-
 // components/Navbar.jsx
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -182,10 +178,8 @@ const Navbar = () => {
 
   return (
     <nav className="navbar bg-base-100 shadow-md px-4 md:px-6 sticky top-0 z-50">
-      
       {/* LEFT: Mobile menu + Brand */}
       <div className="navbar-start">
-        
         {/* 🔽 Mobile dropdown */}
         <div className="dropdown lg:hidden">
           <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -209,7 +203,9 @@ const Navbar = () => {
                 </Link>
               </li>
             )}
-
+            <li>
+              <Link to="/">Home</Link>
+            </li>
             <li>
               <Link to="/settings">Settings</Link>
             </li>
@@ -241,15 +237,20 @@ const Navbar = () => {
         </div>
 
         {/* Brand */}
-        <Link to="/" className="text-xl font-bold text-primary ml-2">
-          TaskFlow 🚀
+        <Link to="/" className="ml-2 text-3xl font-black tracking-tight group">
+          <span className="text-primary transition-all duration-300 group-hover:tracking-wide">
+            In
+          </span>
+
+          <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+            tegro
+          </span>
         </Link>
       </div>
 
       {/* RIGHT: Desktop menu */}
       <div className="navbar-end hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-2 items-center">
-          
           {authUser && (
             <li>
               <Link
@@ -263,7 +264,9 @@ const Navbar = () => {
               </Link>
             </li>
           )}
-
+          <li>
+            <Link to="/">Home</Link>
+          </li>
           <li>
             <Link to="/settings">Settings</Link>
           </li>
